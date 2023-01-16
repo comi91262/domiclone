@@ -7,9 +7,8 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+window.Vue = require('vue').default;
 window.Vue.use(require('vuex'));
-
 
 
 /**
@@ -18,24 +17,24 @@ window.Vue.use(require('vuex'));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('entry', require('./components/Entry.vue'));
-Vue.component('front', require('./components/Front.vue'));
+Vue.component('entry', require('./components/Entry.vue').default);
+Vue.component('front', require('./components/Front.vue').default);
 
 
-Vue.component('card', require('./components/Card.vue'));
-Vue.component('balloon', require('./components/Balloon.vue'));
-Vue.component('selection', require('./components/Selection.vue'));
+Vue.component('card', require('./components/Card.vue').default);
+Vue.component('balloon', require('./components/Balloon.vue').default);
+Vue.component('selection', require('./components/Selection.vue').default);
 
-Vue.component('hand', require('./components/Hand.vue'));
-Vue.component('supply', require('./components/Supply.vue'));
-Vue.component('playarea', require('./components/PlayArea.vue'));
-Vue.component('trash', require('./components/Trash.vue'));
-Vue.component('public', require('./components/Public.vue'));
+Vue.component('hand', require('./components/Hand.vue').default);
+Vue.component('supply', require('./components/Supply.vue').default);
+Vue.component('playarea', require('./components/PlayArea.vue').default);
+Vue.component('trash', require('./components/Trash.vue').default);
+Vue.component('public', require('./components/Public.vue').default);
 
 
-Vue.component('debug', require('./components/Debug.vue'));
+Vue.component('debug', require('./components/Debug.vue').default);
 
-Vue.component('log', require('./components/Log.vue'));
+Vue.component('log', require('./components/Log.vue').default);
 
 
 
