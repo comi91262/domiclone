@@ -18,7 +18,32 @@
 </template>
 
 <script>
+import Entry from './Entry.vue'
+import Card from './Card.vue'
+import Balloon from './Balloon.vue'
+import Selection from './Selection.vue'
+import Hand from './Hand.vue'
+import Supply from './Supply.vue'
+import PlayArea from './PlayArea.vue'
+import Trash from './Trash.vue'
+import Public from './Public.vue'
+import Debug from './Debug.vue'
+import Log from './Log.vue'
+
 export default {
+    components: {
+    Entry,
+    Card,
+    Balloon,
+    Selection,
+    Hand,
+    Supply,
+    PlayArea,
+    Trash,
+    Public,
+    Debug,
+    Log,
+    },
     props: ['mode'],
     created: function (){
         if (this.mode !== 'debug'){

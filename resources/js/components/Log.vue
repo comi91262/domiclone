@@ -10,8 +10,8 @@
 </template>
 
 <script>
-export default {
-    data: function () {
+module.exports = {
+    data() {
         return {
         }
     },

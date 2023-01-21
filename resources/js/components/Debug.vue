@@ -1,7 +1,7 @@
 <template>
     <div>
-        <input type="button" value="init playdata" @click="init"></input>
-        <input type="button" value="load session" @click="load_session"></input>
+        <input type="button" value="init playdata" @click="init">
+        <input type="button" value="load session" @click="load_session">
         <div> プレイヤID:{{ id }} </div>
         <div> hands : {{ hand }}</div>
         <div> deck  : {{ deck }}</div>
