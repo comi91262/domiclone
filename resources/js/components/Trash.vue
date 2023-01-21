@@ -12,10 +12,10 @@
 </template>
 
 <script>
+import Card from './Card.vue'
 export default {
-    created: function (){
-    },
-    data: function () {
+    components: { Card },
+    data() {
         return {}
     },
     methods: {

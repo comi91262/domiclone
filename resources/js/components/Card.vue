@@ -25,7 +25,7 @@
 <script>
 export default {
     props: ["name","desc","type","cost","value"],
-    data: function () {
+    data() {
         return {
             show : false, 
         }

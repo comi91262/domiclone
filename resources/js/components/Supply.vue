@@ -13,7 +13,9 @@
 
 
 <script>
+import Card from './Card.vue'
 export default {
+    components: { Card },
     methods: {
         click: function(id){
             switch(this.$store.getters.phase){

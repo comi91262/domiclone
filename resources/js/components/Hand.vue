@@ -18,7 +18,10 @@
     </div>
 </template>
 <script>
+import Card from './Card.vue'
+import Selection from './Selection.vue'
 export default {
+    components: { Card,Selection },
     methods: {
         click: function(value){
             switch(this.$store.getters.phase){
