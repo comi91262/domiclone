@@ -19,10 +19,10 @@ const actions = {
         });
     },
     clean(){
-        return axios.get('/clean');
+        return axios.get('/api/clean');
     },
     exitTurn({commit, dispatch}){
-        return axios.put('/turns');
+        return axios.put('/api/turns');
     },
 }
 

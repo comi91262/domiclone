@@ -21,7 +21,7 @@ const actions = {
     //現在のターンが自分のターンかをリクエストし、
     //自分のターンの場合、アクションフェイズを開始する。
     start({commit, dispatch}){
-        axios.get('/turns/player').then(e => {
+        axios.get('/api/turns/player').then(e => {
             if (e.data.is_turn){
                 dispatch('getSupplies').then(() =>{
                     dispatch('startActionPhase');
@@ -37,28 +37,28 @@ const actions = {
         });
     },
     getHandsAndPlayArea({commit}){
-        return axios.get('/hands_and_playarea').then(res => {
+        return axios.get('/api/hands_and_playarea').then(res => {
             commit('updateHands',    res.data.hands);
             commit('updatePlayArea', res.data.playarea);
         });
     },
     getHands ({commit}){
-        return axios.get('/hands').then(res => {
+        return axios.get('/api/hands').then(res => {
             commit('updateHands', res.data.ui);
         })
     },
     getSupplies ({commit}){
-        return axios.get('/supplies').then(res => {
+        return axios.get('/api/supplies').then(res => {
             commit('updateSupplies', res.data.ui);
         })
     },
     getPlayArea ({commit}){
-        axios.get('/playarea').then(res => {
+        axios.get('/api/playarea').then(res => {
             commit('updatePlayArea', res.data.ui);
         })
     },
     getTrashes ({commit}){
-        axios.get('/trashes').then(res => {
+        axios.get('/api/trashes').then(res => {
             commit('updateTrashes', res.data.ui);
         })
     },

@@ -24,10 +24,10 @@ const actions = {
         });
     },
     exist(){
-        return axios.get('/action_phase/exist');
+        return axios.get('/api/action_phase/exist');
     },
     isActionCard({commit, dispatch}, index){
-        return axios.get('/action_phase/is_action', 
+        return axios.get('/api/action_phase/is_action', 
             {params: {idx : index}}).then(res => {
                 commit('updateMessage', res.data.log);
                 if (res.data.result){
@@ -36,7 +36,7 @@ const actions = {
             });
     },
     action({commit, dispatch}, index){
-        return axios.get('/action_phase/action', {params: {idx : index}}).then(res => {
+        return axios.get('/api/action_phase/action', {params: {idx : index}}).then(res => {
             dispatch('resetHandsAndPlayArea').then(() => {
                 if (res.data.pattern == 1){
                     commit('updateMessage', res.data.log);
@@ -64,7 +64,7 @@ const actions = {
         }
     },
     send({commit, dispatch}, value){
-        return axios.get('/action_phase/chapel', {params: {checks : state.checks}}).then(res => {
+        return axios.get('/api/action_phase/chapel', {params: {checks : state.checks}}).then(res => {
             //res.data.
                 //廃棄カードをデータベースに
                 //する

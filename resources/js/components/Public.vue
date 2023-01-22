@@ -14,9 +14,9 @@
 <script>
 export default {
     props: ['phase'],
-    created: function (){
+    created() {
     },
-    data: function () {
+    data() {
         return {}
     },
     methods: {

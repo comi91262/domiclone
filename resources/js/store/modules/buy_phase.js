@@ -48,14 +48,14 @@ const actions = {
         commit('beforeBuyId', buyId);
     },
     estimate({commit, dispatch}, id){
-        return axios.get('/buy_phase/estimate', {params: {id: id}});
+        return axios.get('/api/buy_phase/estimate', {params: {id: id}});
     },
     buy({commit, dispatch, rootState}){
         dispatch('isChecked').then(res => {
             if (res.data.result) {
                 var checks = rootState.player.checks;
                 //plusBuy -> plusCoinではない
-                axios.get('/buy_phase/buy', {params: {checks: checks, id: state.buyId, plusBuy: state.selected}}).then(res => {
+                axios.get('/api/buy_phase/buy', {params: {checks: checks, id: state.buyId, plusBuy: state.selected}}).then(res => {
                     commit('disappearBuyButton');
                     commit('disappearBuySelection');
                     if (res.data.is_gone){
@@ -79,7 +79,7 @@ const actions = {
     },
     isChecked({commit, dispatch, rootState}){
         var checks = rootState.player.checks;
-        return axios.get('/buy_phase/check', {params: {checks: checks, id: state.buyId, plusBuy: state.selected}});
+        return axios.get('/api/buy_phase/check', {params: {checks: checks, id: state.buyId, plusBuy: state.selected}});
 
     },
 }
