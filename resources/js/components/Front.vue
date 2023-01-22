@@ -7,7 +7,7 @@
                 <supply></supply>
             </div>
             <div class="row col-md-6">
-                <playarea></playarea>
+                <play-area></play-area>
                 <hand></hand>
             </div>
         </div>
