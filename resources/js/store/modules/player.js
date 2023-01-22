@@ -1,3 +1,5 @@
+import { nextTick } from 'vue/dist/vue.esm-bundler';
+
 const state = {
     hands: [],
     supplies: [],
@@ -65,7 +67,7 @@ const actions = {
     clearCheckedCards({commit}){
         commit('cleanChecks');
         commit('enableClearFocus');
-        Vue.nextTick(() => { commit('disableClearFocus'); });
+        nextTick(() => { commit('disableClearFocus'); });
     },
 }
 

@@ -17,6 +17,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/games', 'GameController@create');
+    Route::post('/users', 'UserController@create');
+    Route::get('/turns/player', 'TurnController@show');
+    Route::put('/turns', 'TurnController@edit');
+});
+
 Route::get('/init_parent', 'GameController@initParent');
 Route::get('/init_child', 'GameController@initChild');
 
@@ -54,3 +61,4 @@ Route::get('/debug/playarea', 'DebugController@get_playarea');
 Route::get('/debug/coin', 'DebugController@get_coin');
 Route::get('/debug/action_counts', 'DebugController@get_action_counts');
 Route::get('/debug/buy_counts', 'DebugController@get_buy_counts');
+

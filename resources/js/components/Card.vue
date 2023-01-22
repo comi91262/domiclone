@@ -23,7 +23,9 @@
     </label>
 </template>
 <script>
+import Balloon from './Balloon.vue'
 export default {
+    components: { Balloon },
     props: ["name","desc","type","cost","value"],
     data() {
         return {

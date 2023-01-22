@@ -31,11 +31,5 @@ Route::get('/main', function () {
     return view('main');
 })->middleware('auth');
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::post('/games', 'GameController@create');
-    Route::post('/users', 'UserController@create');
-    Route::get('/turns/player', 'TurnController@show');
-    Route::put('/turns', 'TurnController@edit');
-});
 
 Auth::routes();
