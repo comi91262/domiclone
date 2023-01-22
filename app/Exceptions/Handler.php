@@ -2,10 +2,9 @@
 
 namespace App\Exceptions;
 
-use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -31,7 +30,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Throwable $exception) 
+    public function report(Throwable $exception)
     {
         parent::report($exception);
     }

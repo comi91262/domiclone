@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\Result;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ResultListener
 {

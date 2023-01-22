@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Turn extends Model
 {
     protected $fillable = [
-        'id', 'user_id', 'is_turn'
+        'id', 'user_id', 'is_turn',
     ];
 
     private $MEMBER_COUNT = 2;
-    
 
     /**
      * ターンテーブル（順番を決めるテーブル)を初期化する
@@ -20,10 +19,9 @@ class Turn extends Model
     {
         $this->truncate();
 
-    
         $members = [];
 
-        for ($i=1; $i <= $memberCount; $i++) {
+        for ($i = 1; $i <= $memberCount; $i++) {
             $members[] = $i;
         }
 
@@ -34,7 +32,7 @@ class Turn extends Model
             $turn->user_id = $member;
             $turn->save();
         }
-    
+
         //初めのレコードのプレイヤーをスタートプレイヤーとする
         //既存のレコードを更新する場合、以下のようにする
         $turn = Turn::find(1);
@@ -48,9 +46,9 @@ class Turn extends Model
     public function getPlayer($id)
     {
         $player = $this->where('user_id', $id)->first();
+
         return $player;
     }
-
 
     /**
      *  次のターンのプレイヤーを決めるメソッド
@@ -76,7 +74,7 @@ class Turn extends Model
     {
         $ids = [];
         $members = $this->all();
-        
+
         foreach ($members as $member) {
             $ids[] = $member->user_id;
         }
@@ -99,21 +97,19 @@ class Turn extends Model
         }
     }
 
-
     /**
      *  　次のターンのユーザーIDを求めるメソッド
      */
     public function next($id)
     {
-        
         $entryIds = $this->getEntries();
 
         $memberN = count($entryIds);
         $next = 0;
 
-        for ($i=0; $i < $memberN; $i++) {
-            if ($id == $entryIds[$i]){
-                if ($i == $memberN - 1){
+        for ($i = 0; $i < $memberN; $i++) {
+            if ($id == $entryIds[$i]) {
+                if ($i == $memberN - 1) {
                     $next = 0;
                 } else {
                     $next = $i + 1;
@@ -123,8 +119,5 @@ class Turn extends Model
         }
 
         return $this->find($next + 1)->user_id;
-
-        
     }
-
 }

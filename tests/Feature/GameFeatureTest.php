@@ -3,9 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class GameFeatureTest extends TestCase
 {
@@ -48,7 +45,7 @@ class GameFeatureTest extends TestCase
     /*
      * 必要なテスト
      * showHand
-     * 
+     *
      * /
 
     public function testClean()
@@ -59,7 +56,5 @@ class GameFeatureTest extends TestCase
     {
         $response = $this->get('/dummy');
         $response->assertStatus(200);
-                 
     }
 }
-

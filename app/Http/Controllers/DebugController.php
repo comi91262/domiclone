@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-use App\User;
 use App\Card;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class DebugController extends Controller
 {
@@ -15,7 +13,6 @@ class DebugController extends Controller
     {
         $id = Auth::id();
         $this->init_player_local($id);
-
     }
 
     private function init_player_local($id)
@@ -43,25 +40,29 @@ class DebugController extends Controller
     {
         return session('discard');
     }
-    
+
     public function get_playarea()
     {
         return session('play_area');
     }
+
     public function get_coin()
     {
         return session('coin');
     }
+
     public function get_action_counts()
     {
         return session('action_count');
     }
+
     public function get_buy_counts()
     {
         return session('buy_count');
     }
 
-    public function getPlayAreaInfo(){
+    public function getPlayAreaInfo()
+    {
         $cardList = new Card();
         $playarea = session('play_area');
 
@@ -76,5 +77,4 @@ class DebugController extends Controller
 
         return json_encode(['ui' => $result]);
     }
-
 }

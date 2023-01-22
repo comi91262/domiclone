@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DummyTurn extends Model
 {
     protected $fillable = [
-        'id', 'user_id'
+        'id', 'user_id',
     ];
 
     /**
@@ -17,7 +17,7 @@ class DummyTurn extends Model
     {
         $ids = [];
         $members = $this->all();
-        
+
         foreach ($members as $member) {
             $ids[] = $member->user_id;
         }
@@ -35,10 +35,9 @@ class DummyTurn extends Model
     {
         $members = $this->getEntries();
 
-        if (!in_array($id, $members)){
+        if (! in_array($id, $members)) {
             $this->user_id = $id;
             $this->save();
         }
     }
-
 }

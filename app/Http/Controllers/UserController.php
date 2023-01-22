@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
 
 class UserController extends Controller
 {
@@ -16,6 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $user = new User();
+
         return $user->all();
     }
 
@@ -32,12 +33,11 @@ class UserController extends Controller
         session(['play_area' => []]);
         session(['coin' => 0]);
         session(['action_count' => 1]);
-        session(['buy_count'    => 1]);
-
+        session(['buy_count' => 1]);
 
         //山札を初期化して、上から５枚取り出す。
         $deck = $user->initDeck();
-        list ($hand, $deck, $discard) = $user->draw(5, $deck, []);
+        [$hand, $deck, $discard] = $user->draw(5, $deck, []);
 
         session(['deck' => $deck]);
         session(['hand' => $hand]);
@@ -63,8 +63,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-
-
     }
 
     /**

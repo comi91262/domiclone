@@ -2,11 +2,9 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Auth;
-
 use Exception;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -18,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'password', 'coin','updated','deck_top','is_up','hand_top', 'email',
+        'id', 'name', 'password', 'coin', 'updated', 'deck_top', 'is_up', 'hand_top', 'email',
     ];
 
     /**
@@ -40,7 +38,7 @@ class User extends Authenticatable
     ];
 
     //public $timestamps = false;
-    
+
     /**
      *  テストなし
      */
@@ -55,22 +53,19 @@ class User extends Authenticatable
      */
     public function initDeck()
     {
-        $copper = 1;  $estate = 4;
+        $copper = 1;
+        $estate = 4;
         $cards = [$estate, $estate, $estate, $copper, $copper,
-                  $copper, $copper, $copper, $copper, $copper];
+            $copper, $copper, $copper, $copper, $copper];
         shuffle($cards);
 
         return $cards;
-
     }
 
-    /**
-     *   
-     */
     public function show($hand)
     {
         $card = new Card;
-        
+
         $result = [];
         $index = 0;
 
@@ -80,38 +75,36 @@ class User extends Authenticatable
         }
 
         return $result;
-        
     }
 
-
-    /**
-     *
-     */
     public function hasActionCardIn($hands)
     {
         $cardList = new Card();
         foreach ($hands as $cardId) {
             $card = $cardList->find($cardId);
-            if ($cardList->isAction($card->card_type)){
+            if ($cardList->isAction($card->card_type)) {
                 return true;
             }
         }
+
         return false;
     }
 
     //手札からカードを取り除き、プレイエリアにカードをだす
-    public function play($target, $hands){
-        $newHands     = [];
+    public function play($target, $hands)
+    {
+        $newHands = [];
         $newPlayArea = [];
         $i = 0;
         foreach ($hands as $card) {
-            if (!in_array($i, $target)) {
+            if (! in_array($i, $target)) {
                 array_push($newHands, $hands[$i]);
             } else {
                 array_push($newPlayArea, $hands[$i]);
             }
             $i++;
         }
+
         return [$newHands, $newPlayArea];
     }
 
@@ -132,11 +125,8 @@ class User extends Authenticatable
             $card->plus_point];
     }
 
-
-    /**
-     *
-     */
-    public function estimate($hands){
+    public function estimate($hands)
+    {
         $cardList = new Card();
         $sum = 0;
 
@@ -148,33 +138,29 @@ class User extends Authenticatable
         return $sum;
     }
 
-    /**
-     *
-     */
     public function discard($card, $discard)
     {
         array_push($discard, $card);
+
         return $discard;
     }
 
-    /**
-     *
-     */
     public function discardArray($cards, $discard)
     {
         return array_merge($cards, $discard);
     }
 
-
     //手札を山札$n枚数分引く。山札が枯れた場合、捨て札をシャッフルし、
     //山札にする。そして、足りない分を補充する
     //返り値は　山札、手札、捨て札
-    
+
     /**
      * テストなし
      */
-    public function canDrawInDeck($drawN, $deck){
+    public function canDrawInDeck($drawN, $deck)
+    {
         $deckN = count($deck);
+
         return $drawN <= $deckN;
     }
 
@@ -182,11 +168,12 @@ class User extends Authenticatable
     {
         $deckN = count($deck);
 
-        if ($drawN > $deckN){
+        if ($drawN > $deckN) {
             throw new Exception('drawInDeck: 山札を超えてドローしている');
         }
-        
+
         $hand = array_splice($deck, $deckN - $drawN, $drawN);
+
         return [$hand, $deck];
     }
 
@@ -198,27 +185,27 @@ class User extends Authenticatable
 
         //超えた分を新しい山札から引く
         return $this->drawInDeck($drawN, $newDeck);
-        
     }
 
     //手札はカードID順でソートする
     public function draw($drawN, $deck, $discard)
     {
-        if (!$this->canDrawInDeck($drawN, $deck)){
+        if (! $this->canDrawInDeck($drawN, $deck)) {
             $deckN = count($deck);
-            list($hand1, $deck1) = $this->drawInDeck($deckN, $deck);
-            list($hand2, $deck2) = $this->drawOverDeck($drawN - $deckN, $discard);
+            [$hand1, $deck1] = $this->drawInDeck($deckN, $deck);
+            [$hand2, $deck2] = $this->drawOverDeck($drawN - $deckN, $discard);
             $newHands = array_merge($hand1, $hand2);
             $newDeck = array_merge($deck1, $deck2);
             sort($newHands);
+
             return [$newHands, $newDeck, []];
         } else {
-            list($hand, $deck) = $this->drawInDeck($drawN, $deck);
+            [$hand, $deck] = $this->drawInDeck($drawN, $deck);
             sort($hand);
+
             return [$hand, $deck, $discard];
         }
-    }    
-
+    }
 
     public function calcVictory($hands, $deck)
     {
@@ -236,6 +223,4 @@ class User extends Authenticatable
         //脇に寄せた分の勝利点を集計する(海辺以降)
         return $total;
     }
-    
-
 }
