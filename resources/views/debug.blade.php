@@ -1,4 +1,3 @@
-@extends('layouts.app')
-@section('content')
-<front mode="debug"></front>
-@endsection
+<x-app-layout>
+    <front mode="debug"></front>
+</x-app-layout>

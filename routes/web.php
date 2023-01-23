@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,25 +14,22 @@
 |
 */
 
-Route::get('/', 'Auth\LoginController@showLoginForm');
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('login', 'Auth\LoginController@showLoginForm');
-Route::post('login', 'Auth\LoginController@login')->name('login');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('logout', 'Auth\LoginController@logout');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 Route::get('/debug', function () {
     return view('debug');
 })->middleware('auth');
 
-Route::get('/entry', function () {
-    return view('entry');
-})->middleware('auth');
-
-Route::get('/main', function () {
-    return view('main');
-})->middleware('auth');
-
-
-Auth::routes();
+require __DIR__.'/auth.php';
