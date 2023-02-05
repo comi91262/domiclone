@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        $this->call('CardSeeder');
+        $this->call([
+            CardSeeder::class,
+        ]);
         Model::reguard();
     }
 }
