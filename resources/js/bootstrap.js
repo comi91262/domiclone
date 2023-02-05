@@ -9,7 +9,14 @@ window._ = _;
  */
 
 import axios from 'axios';
-window.axios = axios;
+window.axios = axios.create({
+  baseURL: 'http://localhost:18080',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
+  },
+  responseType: 'json'  
+});
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

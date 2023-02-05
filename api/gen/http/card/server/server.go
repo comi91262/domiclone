@@ -10,16 +10,19 @@ package server
 import (
 	"context"
 	"net/http"
+	"regexp"
 
 	card "github.com/comi91262/domilike/gen/card"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
+	"goa.design/plugins/v3/cors"
 )
 
 // Server lists the card service endpoint HTTP handlers.
 type Server struct {
 	Mounts []*MountPoint
 	Get    http.Handler
+	CORS   http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -50,8 +53,10 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"Get", "GET", "/cards/{id}"},
+			{"CORS", "OPTIONS", "/cards/{id}"},
 		},
-		Get: NewGetHandler(e.Get, mux, decoder, encoder, errhandler, formatter),
+		Get:  NewGetHandler(e.Get, mux, decoder, encoder, errhandler, formatter),
+		CORS: NewCORSHandler(),
 	}
 }
 
@@ -61,6 +66,7 @@ func (s *Server) Service() string { return "card" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.Get = m(s.Get)
+	s.CORS = m(s.CORS)
 }
 
 // MethodNames returns the methods served.
@@ -69,6 +75,7 @@ func (s *Server) MethodNames() []string { return card.MethodNames[:] }
 // Mount configures the mux to serve the card endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetHandler(mux, h.Get)
+	MountCORSHandler(mux, h.CORS)
 }
 
 // Mount configures the mux to serve the card endpoints.
@@ -79,7 +86,7 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 // MountGetHandler configures the mux to serve the "card" service "get"
 // endpoint.
 func MountGetHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
+	f, ok := HandleCardOrigin(h).(http.HandlerFunc)
 	if !ok {
 		f = func(w http.ResponseWriter, r *http.Request) {
 			h.ServeHTTP(w, r)
@@ -124,5 +131,49 @@ func NewGetHandler(
 		if err := encodeResponse(ctx, w, res); err != nil {
 			errhandler(ctx, w, err)
 		}
+	})
+}
+
+// MountCORSHandler configures the mux to serve the CORS endpoints for the
+// service card.
+func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
+	h = HandleCardOrigin(h)
+	mux.Handle("OPTIONS", "/cards/{id}", h.ServeHTTP)
+}
+
+// NewCORSHandler creates a HTTP handler which returns a simple 200 response.
+func NewCORSHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+	})
+}
+
+// HandleCardOrigin applies the CORS response headers corresponding to the
+// origin for the service card.
+func HandleCardOrigin(h http.Handler) http.Handler {
+	spec0 := regexp.MustCompile(".*localhost.*")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			h.ServeHTTP(w, r)
+			return
+		}
+		if cors.MatchOriginRegexp(origin, spec0) {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Vary", "Origin")
+			w.Header().Set("Access-Control-Expose-Headers", "X-Time, X-Api-Version")
+			w.Header().Set("Access-Control-Max-Age", "100")
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := r.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+				w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
+			}
+			h.ServeHTTP(w, r)
+			return
+		}
+		h.ServeHTTP(w, r)
+		return
 	})
 }

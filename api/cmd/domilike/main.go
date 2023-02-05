@@ -73,7 +73,7 @@ func main() {
 	switch *hostF {
 	case "localhost":
 		{
-			addr := "http://localhost:8000"
+			addr := "http://localhost:18080"
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
@@ -97,7 +97,7 @@ func main() {
 		}
 
 		{
-			addr := "grpc://localhost:8080"
+			addr := "grpc://localhost:28080"
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)

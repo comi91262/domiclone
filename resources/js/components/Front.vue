@@ -61,6 +61,11 @@ export default {
                     this.$store.dispatch('start');
                 })
         } else {
+            axios.get('/cards/1').then(res => {
+                this.$store.dispatch('getSupplies').then(() =>{
+                    this.$store.dispatch('startActionPhase');
+                });
+            });
             axios.post('/api/users').then(res => {
                 this.$store.dispatch('getSupplies').then(() =>{
                     this.$store.dispatch('startActionPhase');
