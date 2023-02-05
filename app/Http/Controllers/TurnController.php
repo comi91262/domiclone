@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Turn;
+use App\Models\Turn;
 
 class TurnController extends Controller
 {

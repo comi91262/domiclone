@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Card;
-use App\User;
+use App\Models\Card;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DebugController extends Controller

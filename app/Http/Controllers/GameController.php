@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Card;
-use App\DummyTurn;
-use App\Supply;
-use App\Trash;
-use App\Turn;
-use App\User;
+use App\Models\Card;
+use App\Models\DummyTurn;
+use App\Models\Supply;
+use App\Models\Trash;
+use App\Models\Turn;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
