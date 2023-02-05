@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"os"
 
-	calcc "github.com/comi91262/domilike/gen/grpc/calc/client"
+	cardc "github.com/comi91262/domilike/gen/grpc/card/client"
 	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
@@ -21,15 +21,14 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `calc multiply
+	return `card get
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` calc multiply --message '{
-      "a": 8399553735696626949,
-      "b": 360622074634248926
+	return os.Args[0] + ` card get --message '{
+      "id": 8369734819711743268
    }'` + "\n" +
 		""
 }
@@ -38,13 +37,13 @@ func UsageExamples() string {
 // line.
 func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, interface{}, error) {
 	var (
-		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
+		cardFlags = flag.NewFlagSet("card", flag.ContinueOnError)
 
-		calcMultiplyFlags       = flag.NewFlagSet("multiply", flag.ExitOnError)
-		calcMultiplyMessageFlag = calcMultiplyFlags.String("message", "", "")
+		cardGetFlags       = flag.NewFlagSet("get", flag.ExitOnError)
+		cardGetMessageFlag = cardGetFlags.String("message", "", "")
 	)
-	calcFlags.Usage = calcUsage
-	calcMultiplyFlags.Usage = calcMultiplyUsage
+	cardFlags.Usage = cardUsage
+	cardGetFlags.Usage = cardGetUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -61,8 +60,8 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "calc":
-			svcf = calcFlags
+		case "card":
+			svcf = cardFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -78,10 +77,10 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "calc":
+		case "card":
 			switch epn {
-			case "multiply":
-				epf = calcMultiplyFlags
+			case "get":
+				epf = cardGetFlags
 
 			}
 
@@ -105,12 +104,12 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	)
 	{
 		switch svcn {
-		case "calc":
-			c := calcc.NewClient(cc, opts...)
+		case "card":
+			c := cardc.NewClient(cc, opts...)
 			switch epn {
-			case "multiply":
-				endpoint = c.Multiply()
-				data, err = calcc.BuildMultiplyPayload(*calcMultiplyMessageFlag)
+			case "get":
+				endpoint = c.Get()
+				data, err = cardc.BuildGetPayload(*cardGetMessageFlag)
 			}
 		}
 	}
@@ -121,29 +120,28 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	return endpoint, data, nil
 }
 
-// calcUsage displays the usage of the calc command and its subcommands.
-func calcUsage() {
-	fmt.Fprintf(os.Stderr, `The calc service performs operations on numbers.
+// cardUsage displays the usage of the card command and its subcommands.
+func cardUsage() {
+	fmt.Fprintf(os.Stderr, `Service is the card service interface.
 Usage:
-    %[1]s [globalflags] calc COMMAND [flags]
+    %[1]s [globalflags] card COMMAND [flags]
 
 COMMAND:
-    multiply: Multiply implements multiply.
+    get: Get implements get.
 
 Additional help:
-    %[1]s calc COMMAND --help
+    %[1]s card COMMAND --help
 `, os.Args[0])
 }
-func calcMultiplyUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc multiply -message JSON
+func cardGetUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] card get -message JSON
 
-Multiply implements multiply.
+Get implements get.
     -message JSON: 
 
 Example:
-    %[1]s calc multiply --message '{
-      "a": 8399553735696626949,
-      "b": 360622074634248926
+    %[1]s card get --message '{
+      "id": 8369734819711743268
    }'
 `, os.Args[0])
 }

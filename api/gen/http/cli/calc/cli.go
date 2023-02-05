@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"os"
 
-	calcc "github.com/comi91262/domilike/gen/http/calc/client"
+	cardc "github.com/comi91262/domilike/gen/http/card/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -22,13 +22,13 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `calc multiply
+	return `card get
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` calc multiply --a 5952269320165453119 --b 1828520165265779840` + "\n" +
+	return os.Args[0] + ` card get --id 8412688459378406762` + "\n" +
 		""
 }
 
@@ -42,14 +42,13 @@ func ParseEndpoint(
 	restore bool,
 ) (goa.Endpoint, interface{}, error) {
 	var (
-		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
+		cardFlags = flag.NewFlagSet("card", flag.ContinueOnError)
 
-		calcMultiplyFlags = flag.NewFlagSet("multiply", flag.ExitOnError)
-		calcMultiplyAFlag = calcMultiplyFlags.String("a", "REQUIRED", "Left operand")
-		calcMultiplyBFlag = calcMultiplyFlags.String("b", "REQUIRED", "Right operand")
+		cardGetFlags  = flag.NewFlagSet("get", flag.ExitOnError)
+		cardGetIDFlag = cardGetFlags.String("id", "REQUIRED", "Card ID")
 	)
-	calcFlags.Usage = calcUsage
-	calcMultiplyFlags.Usage = calcMultiplyUsage
+	cardFlags.Usage = cardUsage
+	cardGetFlags.Usage = cardGetUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -66,8 +65,8 @@ func ParseEndpoint(
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "calc":
-			svcf = calcFlags
+		case "card":
+			svcf = cardFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -83,10 +82,10 @@ func ParseEndpoint(
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "calc":
+		case "card":
 			switch epn {
-			case "multiply":
-				epf = calcMultiplyFlags
+			case "get":
+				epf = cardGetFlags
 
 			}
 
@@ -110,12 +109,12 @@ func ParseEndpoint(
 	)
 	{
 		switch svcn {
-		case "calc":
-			c := calcc.NewClient(scheme, host, doer, enc, dec, restore)
+		case "card":
+			c := cardc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
-			case "multiply":
-				endpoint = c.Multiply()
-				data, err = calcc.BuildMultiplyPayload(*calcMultiplyAFlag, *calcMultiplyBFlag)
+			case "get":
+				endpoint = c.Get()
+				data, err = cardc.BuildGetPayload(*cardGetIDFlag)
 			}
 		}
 	}
@@ -126,27 +125,26 @@ func ParseEndpoint(
 	return endpoint, data, nil
 }
 
-// calcUsage displays the usage of the calc command and its subcommands.
-func calcUsage() {
-	fmt.Fprintf(os.Stderr, `The calc service performs operations on numbers.
+// cardUsage displays the usage of the card command and its subcommands.
+func cardUsage() {
+	fmt.Fprintf(os.Stderr, `Service is the card service interface.
 Usage:
-    %[1]s [globalflags] calc COMMAND [flags]
+    %[1]s [globalflags] card COMMAND [flags]
 
 COMMAND:
-    multiply: Multiply implements multiply.
+    get: Get implements get.
 
 Additional help:
-    %[1]s calc COMMAND --help
+    %[1]s card COMMAND --help
 `, os.Args[0])
 }
-func calcMultiplyUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc multiply -a INT -b INT
+func cardGetUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] card get -id INT
 
-Multiply implements multiply.
-    -a INT: Left operand
-    -b INT: Right operand
+Get implements get.
+    -id INT: Card ID
 
 Example:
-    %[1]s calc multiply --a 5952269320165453119 --b 1828520165265779840
+    %[1]s card get --id 8412688459378406762
 `, os.Args[0])
 }
