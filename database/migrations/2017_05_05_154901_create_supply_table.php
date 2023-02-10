@@ -13,7 +13,7 @@ class CreateSuppliesTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplies', function (Blueprint $table) {
+        Schema::create('supply', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name_jp', 100);
             $table->integer('coin_cost');
@@ -31,6 +31,6 @@ class CreateSuppliesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplies');
+        Schema::dropIfExists('supply');
     }
 }

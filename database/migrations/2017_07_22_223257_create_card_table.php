@@ -13,7 +13,7 @@ class CreateCardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('card', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name_jp', 100);
             $table->string('name_en', 100);
@@ -41,6 +41,6 @@ class CreateCardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('card');
     }
 }

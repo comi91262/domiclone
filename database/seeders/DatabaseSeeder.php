@@ -30,7 +30,7 @@ class CardSeeder extends Seeder
 
     public function run()
     {
-        DB::table('cards')->truncate();
+        DB::table('card')->truncate();
 
         $this->setText();
 

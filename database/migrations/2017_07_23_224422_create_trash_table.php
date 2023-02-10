@@ -13,7 +13,7 @@ class CreateTrashsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trashes', function (Blueprint $table) {
+        Schema::create('trash', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('card_id');
             $table->string('name_jp', 100);
