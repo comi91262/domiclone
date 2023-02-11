@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTrashsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,18 @@ class CreateTrashsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trash', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('supply', function (Blueprint $table) {
+            $table->integer('game_id');
             $table->integer('card_id');
+            $table->integer('order');
             $table->string('name_jp', 100);
             $table->integer('coin_cost');
             $table->string('card_type', 100);
             $table->string('description', 200);
+            $table->integer('rest');
+            $table->boolean('is_gone')->default(false);
+            $table->foreign('game_id')->references('id')->on('game');
+            $table->foreign('card_id')->references('id')->on('card');
         });
     }
 
@@ -30,6 +35,6 @@ class CreateTrashsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trashes');
+        Schema::dropIfExists('supply');
     }
-}
+};

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Card;
+use App\Models\Card;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -33,39 +33,38 @@ class CardSeeder extends Seeder
         DB::table('card')->truncate();
 
         $this->setText();
-
-        Card::create($this->_make('銅貨', 'Copper', '基本', 0, 0, 0, '基本', 'treasure', 1, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('銀貨', 'Silver', '基本', 3, 0, 0, '基本', 'treasure', 2, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('金貨', 'Gold', '基本', 6, 0, 0, '基本', 'treasure', 3, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('屋敷', 'Estate', '基本', 2, 0, 0, '基本', 'victory', 0, 1, 0, 0, 0, 0, 0));
-        Card::create($this->_make('公領', 'Duchy', '基本', 5, 0, 0, '基本', 'victory', 0, 3, 0, 0, 0, 0, 0));
-        Card::create($this->_make('属州', 'Province', '基本', 8, 0, 0, '基本', 'victory', 0, 6, 0, 0, 0, 0, 0));
-        Card::create($this->_make('呪い', 'Curse', '基本', 0, 0, 0, '基本', 'curse', 0, -1, 0, 0, 0, 0, 0));
-        Card::create($this->_make('冒険者', 'Adventurer', '基本', 6, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('役人', 'Bureaucrat', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('地下貯蔵庫', 'Cellar', '基本', 2, 0, 0, '王国', 'action', 0, 0, 0, 1, 0, 0, 0));
-        Card::create($this->_make('宰相', 'Chancellor', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 2, 0));
-        Card::create($this->_make('礼拝堂', 'Chapel', '基本', 2, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('議事堂', 'CouncilRoom', '基本', 5, 0, 0, '王国', 'action', 0, 0, 4, 0, 1, 0, 0));
-        Card::create($this->_make('祝宴', 'Feast', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('祝祭', 'Festival', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 2, 1, 2, 0));
-        Card::create($this->_make('庭園', 'Gardens', '基本', 4, 0, 0, '王国', 'victory', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('研究所', 'Laboratory', '基本', 5, 0, 0, '王国', 'action', 0, 0, 2, 1, 0, 0, 0));
-        Card::create($this->_make('書庫', 'Library', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('市場', 'Market', '基本', 5, 0, 0, '王国', 'action', 0, 0, 1, 1, 1, 1, 0));
-        Card::create($this->_make('民兵', 'Militia', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 2, 0));
-        Card::create($this->_make('鉱山', 'Mine', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('堀', 'Moat', '基本', 2, 0, 0, '王国', 'action-reaction', 0, 0, 2, 0, 0, 0, 0));
-        Card::create($this->_make('金貸し', 'Moneylender', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('改築', 'Remodel', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('鍛冶屋', 'Smithy', '基本', 4, 0, 0, '王国', 'action', 0, 0, 3, 0, 0, 0, 0));
-        Card::create($this->_make('密偵', 'Spy', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 1, 1, 0, 0, 0));
-        Card::create($this->_make('泥棒', 'Thief', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('玉座の間', 'ThroneRoom', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
-        Card::create($this->_make('村', 'Village', '基本', 3, 0, 0, '王国', 'action', 0, 0, 1, 2, 0, 0, 0));
-        Card::create($this->_make('魔女', 'Witch', '基本', 5, 0, 0, '王国', 'action-attack', 0, 0, 2, 0, 0, 0, 0));
-        Card::create($this->_make('木こり', 'Woodcutter', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 1, 2, 0));
-        Card::create($this->_make('工房', 'Workshop', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('銅貨', 'Copper', '基本', 0, 0, 0, '基本', 'treasure', 1, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('銀貨', 'Silver', '基本', 3, 0, 0, '基本', 'treasure', 2, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('金貨', 'Gold', '基本', 6, 0, 0, '基本', 'treasure', 3, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('屋敷', 'Estate', '基本', 2, 0, 0, '基本', 'victory', 0, 1, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('公領', 'Duchy', '基本', 5, 0, 0, '基本', 'victory', 0, 3, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('属州', 'Province', '基本', 8, 0, 0, '基本', 'victory', 0, 6, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('呪い', 'Curse', '基本', 0, 0, 0, '基本', 'curse', 0, -1, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('冒険者', 'Adventurer', '基本', 6, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('役人', 'Bureaucrat', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('地下貯蔵庫', 'Cellar', '基本', 2, 0, 0, '王国', 'action', 0, 0, 0, 1, 0, 0, 0));
+        DB::table('card')->insert($this->make('宰相', 'Chancellor', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 2, 0));
+        DB::table('card')->insert($this->make('礼拝堂', 'Chapel', '基本', 2, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('議事堂', 'CouncilRoom', '基本', 5, 0, 0, '王国', 'action', 0, 0, 4, 0, 1, 0, 0));
+        DB::table('card')->insert($this->make('祝宴', 'Feast', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('祝祭', 'Festival', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 2, 1, 2, 0));
+        DB::table('card')->insert($this->make('庭園', 'Gardens', '基本', 4, 0, 0, '王国', 'victory', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('研究所', 'Laboratory', '基本', 5, 0, 0, '王国', 'action', 0, 0, 2, 1, 0, 0, 0));
+        DB::table('card')->insert($this->make('書庫', 'Library', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('市場', 'Market', '基本', 5, 0, 0, '王国', 'action', 0, 0, 1, 1, 1, 1, 0));
+        DB::table('card')->insert($this->make('民兵', 'Militia', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 2, 0));
+        DB::table('card')->insert($this->make('鉱山', 'Mine', '基本', 5, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('堀', 'Moat', '基本', 2, 0, 0, '王国', 'action-reaction', 0, 0, 2, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('金貸し', 'Moneylender', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('改築', 'Remodel', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('鍛冶屋', 'Smithy', '基本', 4, 0, 0, '王国', 'action', 0, 0, 3, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('密偵', 'Spy', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 1, 1, 0, 0, 0));
+        DB::table('card')->insert($this->make('泥棒', 'Thief', '基本', 4, 0, 0, '王国', 'action-attack', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('玉座の間', 'ThroneRoom', '基本', 4, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('村', 'Village', '基本', 3, 0, 0, '王国', 'action', 0, 0, 1, 2, 0, 0, 0));
+        DB::table('card')->insert($this->make('魔女', 'Witch', '基本', 5, 0, 0, '王国', 'action-attack', 0, 0, 2, 0, 0, 0, 0));
+        DB::table('card')->insert($this->make('木こり', 'Woodcutter', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 1, 2, 0));
+        DB::table('card')->insert($this->make('工房', 'Workshop', '基本', 3, 0, 0, '王国', 'action', 0, 0, 0, 0, 0, 0, 0));
     }
 
     public function setText()
@@ -112,7 +111,7 @@ class CardSeeder extends Seeder
         ];
     }
 
-    private function _make($name_jp, $name_en, $card_set, $coin_cost,
+    private function make($name_jp, $name_en, $card_set, $coin_cost,
         $coin_potion, $coin_debt, $class, $card_type,
         $coin, $point, $plus_card, $plus_action,
         $plus_buy, $plus_coin, $plus_point)
