@@ -5,12 +5,12 @@ info:
 servers:
     - url: http://localhost:18080
 paths:
-    /cards/{id}:
+    /api/cards/{id}:
         get:
             tags:
-                - card
-            summary: get card
-            operationId: card#get
+                - user
+            summary: get user
+            operationId: user#get
             parameters:
                 - name: id
                   in: path
@@ -19,9 +19,9 @@ paths:
                   schema:
                     type: integer
                     description: Card ID
-                    example: 5792268765819827137
+                    example: 1283976277424265189
                     format: int64
-                  example: 7349069454565746839
+                  example: 7128142031379217307
             responses:
                 "200":
                     description: OK response.
@@ -29,8 +29,266 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Aut sit non ut reprehenderit cupiditate.
-                            example: Quisquam sed totam repellat sit pariatur sequi.
-components: {}
+                                example: Non voluptates qui nesciunt.
+                            example: Culpa nisi iste optio saepe.
+            security:
+                - jwt_header_Authorization: []
+    /api/coins:
+        get:
+            tags:
+                - player-information
+            summary: get_coins player-information
+            operationId: player-information#get_coins
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 1377223133912844001
+                                format: int64
+                            example: 7696005806230616050
+            security:
+                - jwt_header_Authorization: []
+    /api/decks:
+        get:
+            tags:
+                - player-information
+            summary: get_decks player-information
+            operationId: player-information#get_decks
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 3841027448573298727
+                                format: int64
+                            example: 147959154511216396
+            security:
+                - jwt_header_Authorization: []
+    /api/discards:
+        get:
+            tags:
+                - player-information
+            summary: get_discards player-information
+            operationId: player-information#get_discards
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 1872729241396971125
+                                format: int64
+                            example: 5603225093335697409
+            security:
+                - jwt_header_Authorization: []
+    /api/games:
+        post:
+            tags:
+                - game
+            summary: create game
+            operationId: game#create
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 8889034958543443582
+                                format: int64
+                            example: 5582741897668168842
+    /api/games/{id}:
+        delete:
+            tags:
+                - game
+            summary: delete game
+            operationId: game#delete
+            parameters:
+                - name: id
+                  in: path
+                  description: Game ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Game ID
+                    example: 6537608950415159897
+                    format: int64
+                  example: 9109090102024758489
+            responses:
+                "204":
+                    description: No Content response.
+        get:
+            tags:
+                - game
+            summary: get game
+            operationId: game#get
+            parameters:
+                - name: id
+                  in: path
+                  description: Game ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Game ID
+                    example: 3498905276525468969
+                    format: int64
+                  example: 3107947186250805393
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Impedit tenetur assumenda laboriosam vel.
+                            example: Vitae ut neque qui.
+    /api/games/{id}/supplies:
+        get:
+            tags:
+                - game
+            summary: get_supplies game
+            operationId: game#get_supplies
+            parameters:
+                - name: id
+                  in: path
+                  description: Game ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Game ID
+                    example: 3898511063010778691
+                    format: int64
+                  example: 2542567055922111228
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Perspiciatis officiis qui minima.
+                            example: Deserunt veritatis dolor neque officia ad laboriosam.
+    /api/games/{id}/trashes:
+        get:
+            tags:
+                - game
+            summary: get_trashes game
+            operationId: game#get_trashes
+            parameters:
+                - name: id
+                  in: path
+                  description: Game ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Game ID
+                    example: 8731653844363623803
+                    format: int64
+                  example: 9182634813421750777
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Dicta laboriosam at.
+                            example: Adipisci ut dolor consequatur voluptate et.
+    /api/hands:
+        get:
+            tags:
+                - player-information
+            summary: get_hands player-information
+            operationId: player-information#get_hands
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 8903551088637713247
+                                format: int64
+                            example: 642809017634559414
+            security:
+                - jwt_header_Authorization: []
+    /api/play-areas:
+        get:
+            tags:
+                - player-information
+            summary: get_play_area player-information
+            operationId: player-information#get_play_area
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 4655953736043999884
+                                format: int64
+                            example: 2569190613344550699
+            security:
+                - jwt_header_Authorization: []
+    /api/player-informations:
+        delete:
+            tags:
+                - player-information
+            summary: delete player-information
+            operationId: player-information#delete
+            responses:
+                "204":
+                    description: No Content response.
+            security:
+                - jwt_header_Authorization: []
+        post:
+            tags:
+                - player-information
+            summary: create player-information
+            operationId: player-information#create
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: At maiores vel.
+                            example: Fugiat rem error dolores dignissimos at.
+            security:
+                - jwt_header_Authorization: []
+    /api/victory-points:
+        get:
+            tags:
+                - player-information
+            summary: get_victory_points player-information
+            operationId: player-information#get_victory_points
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                example: 8497957711035701521
+                                format: int64
+                            example: 9128964222354646911
+            security:
+                - jwt_header_Authorization: []
+components:
+    securitySchemes:
+        jwt_header_Authorization:
+            type: http
+            description: JWT based authentication
+            scheme: bearer
 tags:
     - name: card
+    - name: game
+    - name: player-information
+    - name: user

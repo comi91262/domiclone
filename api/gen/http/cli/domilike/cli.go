@@ -14,6 +14,9 @@ import (
 	"os"
 
 	cardc "github.com/comi91262/domilike/gen/http/card/client"
+	gamec "github.com/comi91262/domilike/gen/http/game/client"
+	playerinformationc "github.com/comi91262/domilike/gen/http/player_information/client"
+	userc "github.com/comi91262/domilike/gen/http/user/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -23,12 +26,18 @@ import (
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
 	return `card get
+game (get|create|delete|get-supplies|get-trashes)
+player-information (create|delete|get-coins|get-victory-points|get-decks|get-discards|get-hands|get-play-area)
+user get
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` card get --id 8412688459378406762` + "\n" +
+	return os.Args[0] + ` card get --id 3695231837878481502` + "\n" +
+		os.Args[0] + ` game get --id 3078640335980999677` + "\n" +
+		os.Args[0] + ` player-information create --token "A fuga fugit incidunt ut eligendi."` + "\n" +
+		os.Args[0] + ` user get --id 5146509016517356148 --token "Error quidem."` + "\n" +
 		""
 }
 
@@ -46,9 +55,77 @@ func ParseEndpoint(
 
 		cardGetFlags  = flag.NewFlagSet("get", flag.ExitOnError)
 		cardGetIDFlag = cardGetFlags.String("id", "REQUIRED", "Card ID")
+
+		gameFlags = flag.NewFlagSet("game", flag.ContinueOnError)
+
+		gameGetFlags  = flag.NewFlagSet("get", flag.ExitOnError)
+		gameGetIDFlag = gameGetFlags.String("id", "REQUIRED", "Game ID")
+
+		gameCreateFlags = flag.NewFlagSet("create", flag.ExitOnError)
+
+		gameDeleteFlags  = flag.NewFlagSet("delete", flag.ExitOnError)
+		gameDeleteIDFlag = gameDeleteFlags.String("id", "REQUIRED", "Game ID")
+
+		gameGetSuppliesFlags  = flag.NewFlagSet("get-supplies", flag.ExitOnError)
+		gameGetSuppliesIDFlag = gameGetSuppliesFlags.String("id", "REQUIRED", "Game ID")
+
+		gameGetTrashesFlags  = flag.NewFlagSet("get-trashes", flag.ExitOnError)
+		gameGetTrashesIDFlag = gameGetTrashesFlags.String("id", "REQUIRED", "Game ID")
+
+		playerInformationFlags = flag.NewFlagSet("player-information", flag.ContinueOnError)
+
+		playerInformationCreateFlags     = flag.NewFlagSet("create", flag.ExitOnError)
+		playerInformationCreateTokenFlag = playerInformationCreateFlags.String("token", "REQUIRED", "")
+
+		playerInformationDeleteFlags     = flag.NewFlagSet("delete", flag.ExitOnError)
+		playerInformationDeleteTokenFlag = playerInformationDeleteFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetCoinsFlags     = flag.NewFlagSet("get-coins", flag.ExitOnError)
+		playerInformationGetCoinsTokenFlag = playerInformationGetCoinsFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetVictoryPointsFlags     = flag.NewFlagSet("get-victory-points", flag.ExitOnError)
+		playerInformationGetVictoryPointsTokenFlag = playerInformationGetVictoryPointsFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetDecksFlags     = flag.NewFlagSet("get-decks", flag.ExitOnError)
+		playerInformationGetDecksTokenFlag = playerInformationGetDecksFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetDiscardsFlags     = flag.NewFlagSet("get-discards", flag.ExitOnError)
+		playerInformationGetDiscardsTokenFlag = playerInformationGetDiscardsFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetHandsFlags     = flag.NewFlagSet("get-hands", flag.ExitOnError)
+		playerInformationGetHandsTokenFlag = playerInformationGetHandsFlags.String("token", "REQUIRED", "")
+
+		playerInformationGetPlayAreaFlags     = flag.NewFlagSet("get-play-area", flag.ExitOnError)
+		playerInformationGetPlayAreaTokenFlag = playerInformationGetPlayAreaFlags.String("token", "REQUIRED", "")
+
+		userFlags = flag.NewFlagSet("user", flag.ContinueOnError)
+
+		userGetFlags     = flag.NewFlagSet("get", flag.ExitOnError)
+		userGetIDFlag    = userGetFlags.String("id", "REQUIRED", "Card ID")
+		userGetTokenFlag = userGetFlags.String("token", "REQUIRED", "")
 	)
 	cardFlags.Usage = cardUsage
 	cardGetFlags.Usage = cardGetUsage
+
+	gameFlags.Usage = gameUsage
+	gameGetFlags.Usage = gameGetUsage
+	gameCreateFlags.Usage = gameCreateUsage
+	gameDeleteFlags.Usage = gameDeleteUsage
+	gameGetSuppliesFlags.Usage = gameGetSuppliesUsage
+	gameGetTrashesFlags.Usage = gameGetTrashesUsage
+
+	playerInformationFlags.Usage = playerInformationUsage
+	playerInformationCreateFlags.Usage = playerInformationCreateUsage
+	playerInformationDeleteFlags.Usage = playerInformationDeleteUsage
+	playerInformationGetCoinsFlags.Usage = playerInformationGetCoinsUsage
+	playerInformationGetVictoryPointsFlags.Usage = playerInformationGetVictoryPointsUsage
+	playerInformationGetDecksFlags.Usage = playerInformationGetDecksUsage
+	playerInformationGetDiscardsFlags.Usage = playerInformationGetDiscardsUsage
+	playerInformationGetHandsFlags.Usage = playerInformationGetHandsUsage
+	playerInformationGetPlayAreaFlags.Usage = playerInformationGetPlayAreaUsage
+
+	userFlags.Usage = userUsage
+	userGetFlags.Usage = userGetUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -67,6 +144,12 @@ func ParseEndpoint(
 		switch svcn {
 		case "card":
 			svcf = cardFlags
+		case "game":
+			svcf = gameFlags
+		case "player-information":
+			svcf = playerInformationFlags
+		case "user":
+			svcf = userFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -86,6 +169,60 @@ func ParseEndpoint(
 			switch epn {
 			case "get":
 				epf = cardGetFlags
+
+			}
+
+		case "game":
+			switch epn {
+			case "get":
+				epf = gameGetFlags
+
+			case "create":
+				epf = gameCreateFlags
+
+			case "delete":
+				epf = gameDeleteFlags
+
+			case "get-supplies":
+				epf = gameGetSuppliesFlags
+
+			case "get-trashes":
+				epf = gameGetTrashesFlags
+
+			}
+
+		case "player-information":
+			switch epn {
+			case "create":
+				epf = playerInformationCreateFlags
+
+			case "delete":
+				epf = playerInformationDeleteFlags
+
+			case "get-coins":
+				epf = playerInformationGetCoinsFlags
+
+			case "get-victory-points":
+				epf = playerInformationGetVictoryPointsFlags
+
+			case "get-decks":
+				epf = playerInformationGetDecksFlags
+
+			case "get-discards":
+				epf = playerInformationGetDiscardsFlags
+
+			case "get-hands":
+				epf = playerInformationGetHandsFlags
+
+			case "get-play-area":
+				epf = playerInformationGetPlayAreaFlags
+
+			}
+
+		case "user":
+			switch epn {
+			case "get":
+				epf = userGetFlags
 
 			}
 
@@ -116,6 +253,60 @@ func ParseEndpoint(
 				endpoint = c.Get()
 				data, err = cardc.BuildGetPayload(*cardGetIDFlag)
 			}
+		case "game":
+			c := gamec.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "get":
+				endpoint = c.Get()
+				data, err = gamec.BuildGetPayload(*gameGetIDFlag)
+			case "create":
+				endpoint = c.Create()
+				data = nil
+			case "delete":
+				endpoint = c.Delete()
+				data, err = gamec.BuildDeletePayload(*gameDeleteIDFlag)
+			case "get-supplies":
+				endpoint = c.GetSupplies()
+				data, err = gamec.BuildGetSuppliesPayload(*gameGetSuppliesIDFlag)
+			case "get-trashes":
+				endpoint = c.GetTrashes()
+				data, err = gamec.BuildGetTrashesPayload(*gameGetTrashesIDFlag)
+			}
+		case "player-information":
+			c := playerinformationc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "create":
+				endpoint = c.Create()
+				data, err = playerinformationc.BuildCreatePayload(*playerInformationCreateTokenFlag)
+			case "delete":
+				endpoint = c.Delete()
+				data, err = playerinformationc.BuildDeletePayload(*playerInformationDeleteTokenFlag)
+			case "get-coins":
+				endpoint = c.GetCoins()
+				data, err = playerinformationc.BuildGetCoinsPayload(*playerInformationGetCoinsTokenFlag)
+			case "get-victory-points":
+				endpoint = c.GetVictoryPoints()
+				data, err = playerinformationc.BuildGetVictoryPointsPayload(*playerInformationGetVictoryPointsTokenFlag)
+			case "get-decks":
+				endpoint = c.GetDecks()
+				data, err = playerinformationc.BuildGetDecksPayload(*playerInformationGetDecksTokenFlag)
+			case "get-discards":
+				endpoint = c.GetDiscards()
+				data, err = playerinformationc.BuildGetDiscardsPayload(*playerInformationGetDiscardsTokenFlag)
+			case "get-hands":
+				endpoint = c.GetHands()
+				data, err = playerinformationc.BuildGetHandsPayload(*playerInformationGetHandsTokenFlag)
+			case "get-play-area":
+				endpoint = c.GetPlayArea()
+				data, err = playerinformationc.BuildGetPlayAreaPayload(*playerInformationGetPlayAreaTokenFlag)
+			}
+		case "user":
+			c := userc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "get":
+				endpoint = c.Get()
+				data, err = userc.BuildGetPayload(*userGetIDFlag, *userGetTokenFlag)
+			}
 		}
 	}
 	if err != nil {
@@ -145,6 +336,211 @@ Get implements get.
     -id INT: Card ID
 
 Example:
-    %[1]s card get --id 8412688459378406762
+    %[1]s card get --id 3695231837878481502
+`, os.Args[0])
+}
+
+// gameUsage displays the usage of the game command and its subcommands.
+func gameUsage() {
+	fmt.Fprintf(os.Stderr, `Service is the game service interface.
+Usage:
+    %[1]s [globalflags] game COMMAND [flags]
+
+COMMAND:
+    get: Get implements get.
+    create: Create implements create.
+    delete: Delete implements delete.
+    get-supplies: GetSupplies implements get_supplies.
+    get-trashes: GetTrashes implements get_trashes.
+
+Additional help:
+    %[1]s game COMMAND --help
+`, os.Args[0])
+}
+func gameGetUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game get -id INT
+
+Get implements get.
+    -id INT: Game ID
+
+Example:
+    %[1]s game get --id 3078640335980999677
+`, os.Args[0])
+}
+
+func gameCreateUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game create
+
+Create implements create.
+
+Example:
+    %[1]s game create
+`, os.Args[0])
+}
+
+func gameDeleteUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game delete -id INT
+
+Delete implements delete.
+    -id INT: Game ID
+
+Example:
+    %[1]s game delete --id 5464274365755365624
+`, os.Args[0])
+}
+
+func gameGetSuppliesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game get-supplies -id INT
+
+GetSupplies implements get_supplies.
+    -id INT: Game ID
+
+Example:
+    %[1]s game get-supplies --id 2084272803947529629
+`, os.Args[0])
+}
+
+func gameGetTrashesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] game get-trashes -id INT
+
+GetTrashes implements get_trashes.
+    -id INT: Game ID
+
+Example:
+    %[1]s game get-trashes --id 7599304622463065299
+`, os.Args[0])
+}
+
+// player-informationUsage displays the usage of the player-information command
+// and its subcommands.
+func playerInformationUsage() {
+	fmt.Fprintf(os.Stderr, `Service is the player-information service interface.
+Usage:
+    %[1]s [globalflags] player-information COMMAND [flags]
+
+COMMAND:
+    create: Create implements create.
+    delete: Delete implements delete.
+    get-coins: GetCoins implements get_coins.
+    get-victory-points: GetVictoryPoints implements get_victory_points.
+    get-decks: GetDecks implements get_decks.
+    get-discards: GetDiscards implements get_discards.
+    get-hands: GetHands implements get_hands.
+    get-play-area: GetPlayArea implements get_play_area.
+
+Additional help:
+    %[1]s player-information COMMAND --help
+`, os.Args[0])
+}
+func playerInformationCreateUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information create -token STRING
+
+Create implements create.
+    -token STRING: 
+
+Example:
+    %[1]s player-information create --token "A fuga fugit incidunt ut eligendi."
+`, os.Args[0])
+}
+
+func playerInformationDeleteUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information delete -token STRING
+
+Delete implements delete.
+    -token STRING: 
+
+Example:
+    %[1]s player-information delete --token "Voluptatem provident nam omnis odit."
+`, os.Args[0])
+}
+
+func playerInformationGetCoinsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-coins -token STRING
+
+GetCoins implements get_coins.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-coins --token "Officia laborum voluptas adipisci."
+`, os.Args[0])
+}
+
+func playerInformationGetVictoryPointsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-victory-points -token STRING
+
+GetVictoryPoints implements get_victory_points.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-victory-points --token "Labore minima ut sequi."
+`, os.Args[0])
+}
+
+func playerInformationGetDecksUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-decks -token STRING
+
+GetDecks implements get_decks.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-decks --token "Molestiae expedita commodi."
+`, os.Args[0])
+}
+
+func playerInformationGetDiscardsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-discards -token STRING
+
+GetDiscards implements get_discards.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-discards --token "Voluptatem magnam amet sint explicabo mollitia."
+`, os.Args[0])
+}
+
+func playerInformationGetHandsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-hands -token STRING
+
+GetHands implements get_hands.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-hands --token "Quas assumenda autem velit explicabo at."
+`, os.Args[0])
+}
+
+func playerInformationGetPlayAreaUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] player-information get-play-area -token STRING
+
+GetPlayArea implements get_play_area.
+    -token STRING: 
+
+Example:
+    %[1]s player-information get-play-area --token "Sed omnis."
+`, os.Args[0])
+}
+
+// userUsage displays the usage of the user command and its subcommands.
+func userUsage() {
+	fmt.Fprintf(os.Stderr, `Service is the user service interface.
+Usage:
+    %[1]s [globalflags] user COMMAND [flags]
+
+COMMAND:
+    get: Get implements get.
+
+Additional help:
+    %[1]s user COMMAND --help
+`, os.Args[0])
+}
+func userGetUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] user get -id INT -token STRING
+
+Get implements get.
+    -id INT: Card ID
+    -token STRING: 
+
+Example:
+    %[1]s user get --id 5146509016517356148 --token "Error quidem."
 `, os.Args[0])
 }
